@@ -1,97 +1,336 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# KTXGo - React Native
 
-# Getting Started
+## Thông tin sinh viên
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+- **MSSV:** 23737881
+- **Họ tên:** NGÔ PHONG HÀO
+- **Môn:** Lập trình ứng dụng di động
+- **Bài:** TH2 - React Native
+- **Repository:** 23737881_TH2
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 1. Giới thiệu
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+KTXGo là ứng dụng React Native mô phỏng hệ thống đặt món/giao hàng trong khu ký túc xá.
 
-```sh
-# Using npm
-npm start
+Ứng dụng được xây dựng bằng React Native CLI + TypeScript, sử dụng React Navigation, React Query, Axios, Zustand Persist, AsyncStorage, FlashList và Geolocation.
 
-# OR using Yarn
-yarn start
-```
+Các chức năng chính:
 
-## Step 2: Build and run your app
+- Đăng nhập bằng số điện thoại.
+- Hiển thị danh sách sản phẩm.
+- Tìm kiếm sản phẩm có debounce.
+- Xem chi tiết sản phẩm.
+- Thêm sản phẩm vào giỏ hàng.
+- Thay đổi số lượng sản phẩm.
+- Tính tổng tiền.
+- Lưu giỏ hàng bằng AsyncStorage.
+- Lấy vị trí hiện tại.
+- Tính khoảng cách tới KTX.
+- Tính phí giao hàng.
+- Hiển thị thông tin sinh viên.
+- Đăng xuất.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+---
 
-### Android
+## 2. Công nghệ sử dụng
 
-```sh
-# Using npm
-npm run android
+- React Native 0.87.1
+- TypeScript
+- React 19
+- React Navigation
+- React Query
+- Axios
+- Zustand
+- AsyncStorage
+- FlashList
+- React Native Haptic Feedback
+- React Native Geolocation
 
-# OR using Yarn
-yarn android
-```
+---
 
-### iOS
+## 3. Kiến trúc ứng dụng
+App
+│
+├── SafeAreaProvider
+│
+├── QueryClientProvider
+│
+└── RootNavigator
+    │
+    ├── AuthStack
+    │   └── Login
+    │
+    └── MainTabs
+        │
+        ├── Shop
+        │   └── ShopStack
+        │       ├── Home
+        │       └── Detail
+        │
+        ├── Cart
+        │
+        └── Me
+## 4. Cấu trúc thư mục        
+src/
+├── components/
+│   ├── ProductCard.tsx
+│   └── Watermark.tsx
+│
+├── constants/
+│   ├── student.ts
+│   └── theme.ts
+│
+├── hooks/
+│   ├── useCampusLocation.ts
+│   └── useDebouncedValue.ts
+│
+├── navigation/
+│   ├── AuthStack.tsx
+│   ├── MainTabs.tsx
+│   ├── RootNavigator.tsx
+│   └── ShopStack.tsx
+│
+├── screens/
+│   ├── CartScreen.tsx
+│   ├── DetailScreen.tsx
+│   ├── HomeScreen.tsx
+│   ├── LoginScreen.tsx
+│   └── MeScreen.tsx
+│
+├── services/
+│   ├── apiClient.ts
+│   └── productApi.ts
+│
+└── stores/
+    ├── authStore.ts
+    └── cartStore.ts
+## 5. Câu 1 - Cấu hình sinh viên và biến thể
+Thông tin sinh viên được tập trung trong:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+src/constants/student.ts
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Thông tin:
 
-```sh
-bundle install
-```
+MSSV: 23737881
+Họ tên: NGÔ PHONG HÀO
+LAST_DIGIT: 1
+ROOM_LABEL: P.181
 
-Then, and every time you update your native dependencies, run:
+Biến thể áp dụng:
 
-```sh
-bundle exec pod install
-```
+Watermark: bottom
+Login field: phone
+Tab order: Shop → Giỏ → Tôi
+Haptic: selection
+Shipping formula: B
+Detail presentation: card
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+Watermark:
 
-```sh
-# Using npm
-npm run ios
+TH2 · 23737881 · NGÔ PHONG HÀO · #STAMP
+## 6. Câu 2 - Product API
+Ứng dụng sử dụng Axios thông qua:
 
-# OR using Yarn
-yarn ios
-```
+src/services/apiClient.ts
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+Request interceptor tự động thêm:
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+X-Student-Id: 23737881
 
-## Step 3: Modify your app
+API lấy danh sách sản phẩm:
 
-Now that you have successfully run the app, let's make changes!
+GET https://fakestoreapi.com/products?limit=12
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+API lấy chi tiết sản phẩm:
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+GET https://fakestoreapi.com/products/{id}
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+React Query được sử dụng để quản lý:
 
-## Congratulations! :tada:
+Loading
+Error
+Data
+Refetch
+Cache
 
-You've successfully run and modified your React Native App. :partying_face:
+Danh sách sản phẩm được hiển thị bằng FlashList với 2 cột.
 
-### Now what?
+Tìm kiếm sản phẩm sử dụng debounce thông qua:
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+src/hooks/useDebouncedValue.ts
+## 7. Câu 3 - Cart và Zustand Persist
 
-# Troubleshooting
+Giỏ hàng được quản lý bởi:
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+src/stores/cartStore.ts
 
-# Learn More
+Các chức năng:
 
-To learn more about React Native, take a look at the following resources:
+addItem()
+removeItem()
+changeQty()
+clearCart()
+getTotalQuantity()
+getTotalAmount()
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Giỏ hàng được persist bằng AsyncStorage với key:
+
+ktxgo-cart-23737881
+
+Dữ liệu giỏ hàng vẫn được giữ lại khi ứng dụng được mở lại.
+
+## 8. Haptic Feedback
+
+Khi thêm sản phẩm vào giỏ hàng, ứng dụng sử dụng:
+
+selection
+
+Thông qua:
+
+react-native-haptic-feedback
+
+Haptic được sử dụng ở:
+
+Product Card
+Product Detail
+## 9. Tính giá sản phẩm
+
+Giá hiển thị được tính theo:
+
+Math.round(price * PRICE_MULTIPLIER)
+
+Sau đó format theo:
+
+vi-VN
+
+Ví dụ:
+
+310.000 đ
+## 10. Location và phí giao hàng
+
+Ứng dụng sử dụng:
+
+@react-native-community/geolocation
+
+để lấy vị trí hiện tại của thiết bị.
+
+Khoảng cách được tính bằng công thức Haversine.
+
+Sinh viên sử dụng:
+
+Shipping Formula B
+
+Công thức:
+
+BASE_SHIP_FEE
++ Math.round(distanceKm * 1500)
++ 2000
+
+Thông tin location được sử dụng ở:
+
+MeScreen
+CartScreen
+
+Bao gồm:
+
+Latitude
+Longitude
+Khoảng cách tới KTX
+Phí giao hàng
+Phòng giao
+## 11. Quyền truy cập vị trí
+
+Ứng dụng xử lý các trạng thái:
+
+granted
+denied
+blocked
+error
+
+Nếu quyền bị từ chối, ứng dụng cho phép người dùng yêu cầu cấp lại quyền.
+
+Nếu quyền bị chặn, ứng dụng cung cấp nút mở Settings để người dùng cấp quyền.
+
+## 12. Cart UI
+
+Màn hình Giỏ hàng hỗ trợ:
+
+Tăng số lượng.
+Giảm số lượng.
+Xóa sản phẩm.
+Xóa toàn bộ.
+Tính tạm tính.
+Tính phí giao hàng.
+Tính tổng cộng.
+Hiển thị badge số lượng trên tab Giỏ.
+
+Công thức:
+
+Tổng cộng = Tạm tính + Phí giao hàng
+## 13. Authentication
+
+Ứng dụng sử dụng Zustand Persist cho trạng thái đăng nhập.
+
+Thông tin đăng nhập:
+
+Phone
+
+Token được lưu bằng AsyncStorage.
+
+Key:
+
+ktxgo-auth-23737881
+
+Khi đăng xuất, token được xóa và ứng dụng quay lại màn hình Login.
+
+## 14. Cách chạy project
+
+Cài dependencies:
+
+npm install
+
+Kiểm tra TypeScript:
+
+npx tsc --noEmit
+
+Chạy Android:
+
+npx react-native run-android
+
+Chạy Metro:
+
+npx react-native start
+## 15. Android Location Permission
+
+Ứng dụng yêu cầu:
+
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+Các permission được khai báo trong:
+
+android/app/src/main/AndroidManifest.xml
+## 16. Git
+
+Repository:
+
+23737881_TH2
+
+Branch chính:
+
+main
+
+Các commit chính:
+
+chore: setup KTXGo project
+feat: add student constants and product API
+feat: add authentication and navigation
+feat: implement shop and cart
+feat: add location and shipping fee
+docs: add project README
+## 17. Thông tin sinh viên
+MSSV: 23737881
+Họ tên: NGÔ PHONG HÀO
+TH2 | 23737881 | NGÔ PHONG HÀO | #STAMP
